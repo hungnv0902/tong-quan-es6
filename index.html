@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html lang=”en”>
+
+<head>
+
+    <meta charset=”UTF-8″>
+
+    <meta http-equiv=”X-UA-Compatible” content=”IE=edge”>
+
+    <meta name=”viewport” content=”width=device-width, initial-scale=1.0″>
+    <p id="value"></p>
+
+    <title>Document Name</title>
+
+</head>
+
+<body>
+    <script>
+        //Bài 4
+
+        const numbers = [13, 122, 12, 4, 17, 3, 44];
+
+        const divisibleToTow = numbers.filter(value => value % 2 == 0);
+
+        const result = divisibleToTow.reduce((previousValue, currentValue) => {
+            return previousValue + currentValue;
+        })
+        document.getElementById("value").innerHTML = "Tổng các số chia hết cho 2 là " + result; 
+
+        //Bài 3
+        const student = [
+            {
+                name: "A",
+                score: 8
+            },
+            {
+                name: "B",
+                score: 3
+            },
+            {
+                name: "C",
+                score: 9
+            },
+            {
+                name: "D",
+                score: 11
+            }
+        ];
+
+        student.sort((a, b) => b.score - a.score);
+        const places = student.findIndex(value => value.name === "A") + 1;
+        document.getElementById("value").innerHTML = "Thứ hạng của A là " + places; 
+        console.log(student);
+        
+        // Bài 1
+        const array = [1, 5, 50, 99, 89];
+        if(array.some(value => value > 100)) {
+            document.getElementById("value").innerHTML = "Có số lớn hơn 100"
+        } else {
+            document.getElementById("value").innerHTML = "Không có số lớn hơn 100"
+        }
+
+
+    </script>
+</body>
+
+</html>
