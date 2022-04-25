@@ -1,3 +1,4 @@
+//npm install mongoose
 const mongoose = require('mongoose');
 const { populate } = require('./schema/user');
 
