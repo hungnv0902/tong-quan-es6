@@ -1,6 +1,7 @@
 //npm install mongoose
 const mongoose = require('mongoose');
-const { populate } = require('./schema/user');
+//dong nay bi lỗi nhé mọi người.
+//const { populate } = require('./schema/user');
 
 // const userModel = require('./schema/user')
 const db = mongoose.connection;
