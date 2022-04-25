@@ -1,0 +1,65 @@
+const mongoose = require('mongoose');
+const { populate } = require('./schema/user');
+
+// const userModel = require('./schema/user')
+const db = mongoose.connection;
+const DB_URL = "mongodb://hungnv:123456@127.0.0.1:27017/test"
+
+mongoose.connect(DB_URL, { useNewUrlParser: true }).then(() => { console.log("Connected")});
+db.on("error", (err) => {
+  console.log('Db connect errr', err.message);
+});
+
+
+const schema = mongoose.Schema;
+var ObjectId = schema.Types.ObjectId;
+
+const classSchema = new schema({
+  name : String,
+  address: String,
+  phone: String,
+});
+
+const userSchema = new schema({
+  name : String,
+  address: String,
+  phone: String,
+  class:{ type: ObjectId, ref: "Class" }
+});
+const Class = mongoose.model("Class", classSchema);
+const User = mongoose.model("User", userSchema);
+
+const createClass = async () => {
+  const class1 = await Class.create({
+    name: "lop 10",
+    address: "HN",
+    phone: "9123123123"
+  })
+  console.log(class1);
+}
+
+createClass();
+
+const findUser = async () => {
+  const user = await User.findOne({
+    name: "lop 10"
+  })
+  .populate({
+    path: "class",
+    select: "name",
+    populate: { path: "school", select: "id" },
+  })
+  console.log(user, 'user')
+}
+findUser();
+const createUser = async () => {
+  const class1 = await User.create({
+    name: "lop 10",
+    address: "HN",
+    phone: "9123123123",
+    class: "6266a9eb8584c280cf241291"
+  })
+  console.log(class1);
+}
+
+createUser();
