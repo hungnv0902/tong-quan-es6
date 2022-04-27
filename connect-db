@@ -1,0 +1,125 @@
+const mongoose = require('mongoose');
+
+// const userModel = require('./schema/user')
+const db = mongoose.connection;
+const DB_URL = "mongodb://hungnv:123456@127.0.0.1:27017/test"
+
+mongoose.connect(DB_URL, { useNewUrlParser: true }).then(() => { console.log("Connected")});
+db.on("error", (err) => {
+  console.log('Db connect errr', err.message);
+});
+
+const schema = mongoose.Schema;
+var ObjectId = schema.Types.ObjectId;
+
+const classSchema = new schema({
+  name : String,
+  address: String,
+  phone: String,
+});
+
+const userSchema = new schema({
+  name : String,
+  address: String,
+  phone: String,
+  class:{ type: ObjectId, ref: "Class" }
+});
+const Class = mongoose.model("Class", classSchema);
+const User = mongoose.model("User", userSchema);
+
+// const createClass = async () => {
+//   const class1 = await Class.create({
+//     name: "lop 10",
+//     address: "HN",
+//     phone: "9123123123"
+//   })
+//   console.log(class1);
+// }
+
+// createClass();
+
+// const findUser = async () => {
+//   const user = await User.findOne({
+//     name: "lop 10"
+//   })
+//   .populate({
+//     path: "class",
+//     select: "name",
+//   })
+//   console.log(user, 'user')
+// }
+// findUser();
+// const createUser = async () => {
+//   const class1 = await User.create({
+//     name: "lop 12",
+//     address: "HN",
+//     phone: "9123123123",
+//     class: "6266a9eb8584c280cf241291"
+//   })
+//   console.log(class1);
+// }
+
+// createUser();
+// Aggregation là một framework tổng hợp dữ liệu của MongoDB.
+// Aggregation được xây dựng dựa trên mô hình xử lý dữ liệu dưới dạng pipeline. 
+// Điểm mạnh của aggregation framework là:
+
+// Xử lý nhanh và mạnh mẽ với lượng ít băng thông.
+// Giải quyết được các yêu cầu phức tạp.
+// Có thể làm việc với dữ liệu lớn.
+
+// MongoDB cung cấp phương thức db.collection.aggregate() để chạy aggregation pipeline.
+// db.userCollection.aggregate( [ { <stage 1> }, { <stage 2> }, ..., { <stage N> } ], { <options> } );
+// Các stage được đặt trong một array theo thứ tự thực hiện trước sau.
+const aggUser = async () => {
+  const new_phone = "0987123123";
+  const users = await User.aggregate([
+    {
+      // //được dùng để lọc các document theo một điều kiện nào đó (giồng find());
+      // $match: {
+      //   name: 'lop 12',
+      // },
+      // $project được dùng để chỉ định các field sẽ xuất hiện trong output document 0 hoặc false là không xuất hiện, 1 hoặc true là có
+      // $project: {
+      //   _id: 0,
+      //   name: 1,
+      //   new_phone,
+      // }
+      // //count là chứa tổng số  bản ghi trả về
+      // $count: "total"
+      // $group gộp các bản ghi theo 1 điều kiện
+      // $group: {
+      //   _id: "$name",
+      // }
+      //$unwind được dùng để phân tách giá trị của một array field trong các input document.
+      // $unwind: "$phone"
+      //$lookup cho phép chúng ta thực hiện một phép left outer join giữa hai collection trong cùng một database
+      $lookup: {
+        from: "classes",
+        localField: "class",
+        foreignField: "_id",
+        as: "class"
+    }
+    }, 
+    {
+      $match: {
+        name: 'lop 12',
+      },
+      // $project: {
+      //   _id: 0,
+      //   name: 1,
+      //   class: 1,
+      // }
+    },
+    {
+      $project: {
+        _id: 0,
+        name: 1,
+        class: 1,
+      }
+    }
+  ])
+  console.log(users)
+}
+
+aggUser();
